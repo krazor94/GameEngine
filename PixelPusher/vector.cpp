@@ -16,21 +16,6 @@ vector3f::vector3f(float _x, float _y, float _z)
 	// nothing
 }
 
-
-vector2f::vector2f()
-	: x(0.0f), y(0.0f)
-{
-	// nothing
-}
-
-vector2f::vector2f(float _x, float _y)
-	: x(_x), y(_y)
-{
-	// nothing
-}
-
-
-
 float vector3f::Magnitude()
 {
 	return sqrtf(x*x + y*y + z*z);
@@ -47,20 +32,18 @@ Matrix::Matrix()
 	}
 }
 
-
+//TODO: SetPosition Matrix
 Matrix SetPosition()
 {
-	Matrix t;	
-
+	Matrix t;
 
 	return t;
 }
 
-
 Matrix SetScale(float x, float y, float z)
 {
 	Matrix c;
-	
+
 	c.matrix[0][0] = x;
 	c.matrix[1][1] = y;
 	c.matrix[2][2] = z;
@@ -102,32 +85,6 @@ void Matrix::SetRotationZYX(float x, float y, float z)
 	matrix[3][3] = 1;
 }
 
-vector2f Matrix::TrasformMatrix(vector2f &v)
-{
-	vector2f vec;
-	
-	//vec.x = v.x * matrix[0][0] + v.x * matrix[0][1] + v.x * matrix[0][2];
-	//vec.y = v.y * matrix[0][2] + v.y * matrix[1][2] + v.y * matrix[2][2];
-	
-
-	/*
-	float aX = t.matrix[0][0] * v.x;
-	float eX = t.matrix[1][0] * v.x;
-
-	float bY = t.matrix[0][1] * v.y;
-	float fY = t.matrix[1][1] * v.y;
-	
-	float dW = t.matrix[3][0];
-	float hW = t.matrix[1][3];
-	
-	vec.x = aX + bY + dW;
-	vec.y = eX + fY + hW;
-	*/
-
-	return vec;
-}
-
-
 //rotation matrix around x,y,z
 //https://docs.google.com/viewer?a=v&pid=sites&srcid=ZGVmYXVsdGRvbWFpbnxnbGVubm11cnJheXxneDoyMTJiZTZlNzVlMjFiZTFi
 
@@ -165,7 +122,6 @@ void Matrix::SetRotationX(float angle)
 	matrix[3][3] = 1;
 }
 
-
 void Matrix::SetRotationY(float angle)
 {
 	// convert to radian
@@ -200,12 +156,11 @@ void Matrix::SetRotationY(float angle)
 	matrix[3][3] = 1;
 }
 
-
 void Matrix::SetRotationZ(float angle)
 {
 	// convert to radian
 	angle = angle * 3.14159265359f / 180.0f;
-	
+
 	//x
 	//cos(angle) -sin(angle) 0 0
 	matrix[0][0] = cos(angle);
@@ -234,8 +189,6 @@ void Matrix::SetRotationZ(float angle)
 	matrix[3][2] = 0;
 	matrix[3][3] = 1;
 }
-
-
 
 Matrix MultiplyMatrix(Matrix &a, Matrix &b)
 {
@@ -269,7 +222,6 @@ void PrintMatrix(Matrix &t)
 	}
 }
 
-
 void Matrix::SetIdentityMatrix()
 {
 	//TODO: Set other values to 0, find a more efficient way to do this.
@@ -287,25 +239,15 @@ void Matrix::SetIdentityMatrix()
 	}
 }
 
-
 float Dot(vector3f &a, vector3f &b)
 {
 	return (a.x * b.x) + (a.y * b.y) + (a.z * b.z);
 }
 
-
-void Print3D(vector3f x)
+void Print(vector3f x)
 {
 	cout << "The vector's values are: x[" << x.x << "], y[" << x.y << "], z[" << x.z << "]" << endl;
 }
-
-
-void Print2D(vector2f x)
-{
-	cout << "The vector's values are: x[" << x.x << "], y[" << x.y << "]" << endl;
-}
-
-
 
 Matrix operator *(Matrix &t1, Matrix &t2)
 {
@@ -325,7 +267,6 @@ Matrix operator *(Matrix &t1, Matrix &t2)
 
 	return t;
 }
-
 
 Matrix operator *(Matrix &t, float f)
 {
@@ -355,7 +296,7 @@ vector3f operator *(Matrix &t, vector3f &v)
 
 vector3f operator -(vector3f &v1, vector3f &v2)
 {
-	vector3f v;	
+	vector3f v;
 
 	v.x = v1.x - v2.x;
 	v.y = v1.y - v2.y;

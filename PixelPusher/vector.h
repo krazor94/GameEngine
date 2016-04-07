@@ -3,18 +3,6 @@
 using namespace std;
 #include <iostream>
 
-struct vector2f
-{
-	float x, y;	
-	vector2f();
-	
-	explicit vector2f(float a) : x(a), y(a) {}
-	vector2f(float a, float b);
-	
-};
-
-
-
 struct vector3f
 {
 	float x, y, z;
@@ -47,35 +35,26 @@ struct Matrix
 
 	//4v4 matrix
 	//float matrix[4][4];
-	
 
-	//TODO:Create a Translation Matrix
-	//TODO: Create a Position matrix
 	//TODO: Create a Scale matrix
 
 	Matrix();
-	
+
 	void SetRotationZYX(float z, float y, float x);
 
-	vector2f TrasformMatrix(vector2f &v);
-
-	void SetRotationX(float angle);	
+	void SetRotationX(float angle);
 	void SetRotationY(float angle);
 	void SetRotationZ(float angle);
 
 	void SetIdentityMatrix();
 
-
-
 	void SetTranslation(const vector3f &v)
-	{		
+	{
 		SetIdentityMatrix();
 		matrix[0][3] = v.x;
 		matrix[1][3] = v.y;
 		matrix[2][3] = v.z;
 	}
-
-
 };
 
 //Matrix SetTranslation(vector3f &v);
@@ -90,5 +69,3 @@ Matrix operator *(Matrix &t1, Matrix &t2);
 
 vector3f operator *(Matrix &t, vector3f &v2);
 vector3f operator -(vector3f &v1, vector3f &v2);
-
-

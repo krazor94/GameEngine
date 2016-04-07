@@ -1,21 +1,18 @@
 #include "pixelpush.h"
 #include "vector.h"
 
-
 #include <thread>
 #include <chrono>
 #include <iostream>
 #include <string>
 
 using namespace std::this_thread;
-//using namespace sf;
 using namespace std::chrono;
 using namespace std;
 
 PixelArray *pixel = nullptr;
 int screeHeight;// = PIXEL_HEIGHT / 2;
 int screenWidth;// = PIXEL_WIDTH / 2;
-
 
 Pixel color(int red, int green, int blue, int alpha)
 {
@@ -132,26 +129,15 @@ float maxY(vector3f a, vector3f b, vector3f c)
 	return value;
 }
 
-/*
-
-To fill triangle, calculate if the point you are trying to color in is greater than the point to its right
-initiate the starting point from the highest point in space, check it against the lowest, then to the horizontal to increase performance instead of checking the entire screen
-each frame
-
-check each of the vectors against each other to start
-
-*/
-
-
-
 void DrawFilledTriangle(vector3f a, vector3f b, vector3f c, Pixel col)
 {
+	//enable to check FPS
 	//cout << ".";
 
 	vector3f AB = a - b;
 	vector3f BC = b - c;
 	vector3f CA = c - a;
-		  
+
 	vector3f AB_Perp(-AB.y, AB.x, 0);
 	vector3f BC_Perp(-BC.y, BC.x, 0);
 	vector3f CA_Perp(-CA.y, CA.x, 0);
@@ -162,28 +148,15 @@ void DrawFilledTriangle(vector3f a, vector3f b, vector3f c, Pixel col)
 		left = minX(a, b, c),
 		right = maxX(a, b, c);
 
-	//bool value = true;
-	//int intvalue = (value == true) ? 5 : 45; //ternary operator 
-	
 	for (int j = bottom; j > top; j--)
 	{
 		for (int i = left; i < right; i++)
 		{
-			vector3f vec(i,j,0);
-			
+			vector3f vec(i, j, 0);
+
 			float dotproductA = Dot(AB_Perp, vec - a);
 			float dotproductB = Dot(BC_Perp, vec - b);
 			float dotproductC = Dot(CA_Perp, vec - c);
-
-			//cout << dotproductA << endl;
-			//cout << dotproductB << endl;
-			//cout << dotproductC << endl;
-			//cout << endl << endl;
-
-			/*if (dotproductA < 0 && dotproductB < 0 && dotproductC < 0)
-			{	
-				pixel->pixel[(int)j][(int)i] = col;				
-			}*/
 
 			if (dotproductA > 0 && dotproductB > 0 && dotproductC > 0)
 			{
@@ -191,37 +164,10 @@ void DrawFilledTriangle(vector3f a, vector3f b, vector3f c, Pixel col)
 			}
 		}
 	}
-
 }
-
 
 void DrawTriangle(int size, vector3f a, Pixel col)
 {
-	pixel->pixel[(int)a.y][(int)a.x] = col;
-
-	for (int i = 0; i < size; i++)
-	{
-		pixel->pixel[(int)a.y  + i][(int)a.x + i] = col;
-
-		for (int x = 0; x < size; x++)
-		{
-			pixel->pixel[(int)a.y + x][(int)a.x - x] = col;
-
-			for (int z = 0; z < size; z++)
-			{
-				pixel->pixel[(int)a.y + size][(int)a.x + z] = col;
-				pixel->pixel[(int)a.y + size][(int)a.x - z] = col;
-			}
-		}
-	}
-}
-
-
-//TODO: Draw a 2D triangle in 3D space rotating with arbitrary axis
-
-void DrawTriangle3D(int size, vector3f a, Pixel col)
-{
-	
 	pixel->pixel[(int)a.y][(int)a.x] = col;
 
 	for (int i = 0; i < size; i++)
@@ -241,7 +187,6 @@ void DrawTriangle3D(int size, vector3f a, Pixel col)
 	}
 }
 
-
 void cls(PixelArray *pixelData, Pixel col)
 {
 	for (int j = 0; j < PIXEL_HEIGHT; j++)
@@ -258,50 +203,46 @@ void MyGame(PixelArray *pixelData, const bool *bQuit)
 	pixel = pixelData;
 	//pixelData-> pointer
 
-
-
-	//TODO: REMOVE FAKE CRAP
-	float c = 1.0f,
-		g = 1.0f;
+	float c = 1.0f;
 	vector3f vec = vector3f(180, 120, 0);
 
 	while (!*bQuit)
 	{
-		cls(pixelData , color(0, 0, 0, 255));
-
-
+		cls(pixelData, color(0, 0, 0, 255));
 
 		Matrix t, r, v;
-		vector3f v1 = { 45,90,0 };
-		vector3f v2 = vector3f(75, 20,0);
-		vector3f v3 = vector3f(22, 13,0);
-		
+		//generate 1 triangle
+		//vector3f v1 = vector3f(45, 90, 0);
+		//vector3f v2 = vector3f(75, 20, 0);
+		//vector3f v3 = vector3f(22, 13, 0);
+
+		//generate 4 Triangles
 		const int numTris = 4;
 		vector3f tri[numTris][3] =
 		{
 			{
-				{ -40,-40,-40 },
-				{   0,+40,-40 },
-				{   0,  0, 40}
+				vector3f(-40, -40, -40),
+				vector3f(0, 40, -40),
+				vector3f(0,  0, 40)
 			},
 			{
-				{   0,  0, 40 },
-				{   0,+40,-40 },
-				{ +40,-40,-40 }
+				vector3f(0,  0, 40),
+				vector3f(0, 40, -40),
+				vector3f(40, -40, -40)
 			},
 			{
-				{ -40,-40,-40 },
-				{   0,  0, 40 },
-				{ +40,-40,-40 }
+				vector3f(-40, -40, -40),
+				vector3f(0,  0, 40),
+				vector3f(40, -40, -40)
 			},
 			{
-				{ -40,-40,-40 },
-				{ +40,-40,-40 },
-				{   0, 40,-40 }
+				vector3f(-40, -40, -40),
+				vector3f(40, -40, -40),
+				vector3f(0, 40, -40)
 			}
-
 		};
-		
+
+		//select Collor for each Triangle
 		Pixel col[numTris] =
 		{
 			color(255, 0, 0, 255),
@@ -309,22 +250,27 @@ void MyGame(PixelArray *pixelData, const bool *bQuit)
 			color(0, 0, 255, 255),
 			color(255, 255, 0, 255)
 		};
-		
-		//vec.y -= 1.0f;
-		t.SetTranslation(vec);
-		//TODO: Fix 
-		r.SetRotationY(c++);		
-		v =  t * r;
-		//t.TrasformMatrix(v1);
-		//t.TrasformMatrix(v2);
-		//t.TrasformMatrix(v3);
 
+		t.SetTranslation(vec);
+		r.SetRotationY(c++);
+		v = t * r;
+
+		//draw 4 triangles to screen to make a pyramid
 		for (int i = 0; i < numTris; i++)
 		{
 			DrawFilledTriangle(v * tri[i][0], v * tri[i][1], v * tri[i][2], col[i]);
 		}
 
-		sleep_for(std::chrono::milliseconds(30));
+		//Draw 2D triangle to Slide on X Axis
+		DrawTriangle(30, v * vector3f(40, 50, 20), color(255, 255, 0, 255));
+
+		//draw Small triangles on the points of the 3D triangle
+		DrawTriangle(2, v * tri[0][0], color(255, 255, 255, 255));
+		DrawTriangle(2, v * tri[1][0], color(255, 255, 255, 255));
+		DrawTriangle(2, v * tri[1][1], color(255, 255, 255, 255));
+		DrawTriangle(2, v * tri[1][2], color(255, 255, 255, 255));
+
+		sleep_for(std::chrono::milliseconds(50));
 	}
 }
 
