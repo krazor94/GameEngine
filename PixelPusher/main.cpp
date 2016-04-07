@@ -14,6 +14,7 @@ PixelArray *pixel = nullptr;
 int screeHeight;// = PIXEL_HEIGHT / 2;
 int screenWidth;// = PIXEL_WIDTH / 2;
 
+//pixel color
 Pixel color(int red, int green, int blue, int alpha)
 {
 	Pixel col;
@@ -129,6 +130,7 @@ float maxY(vector3f a, vector3f b, vector3f c)
 	return value;
 }
 
+//draw filed triangle by passing in 3 vectors and the color
 void DrawFilledTriangle(vector3f a, vector3f b, vector3f c, Pixel col)
 {
 	//enable to check FPS
@@ -166,6 +168,7 @@ void DrawFilledTriangle(vector3f a, vector3f b, vector3f c, Pixel col)
 	}
 }
 
+//Draw 1 triangle by passing in the size and position and the color
 void DrawTriangle(int size, vector3f a, Pixel col)
 {
 	pixel->pixel[(int)a.y][(int)a.x] = col;
@@ -187,6 +190,7 @@ void DrawTriangle(int size, vector3f a, Pixel col)
 	}
 }
 
+//clear screen
 void cls(PixelArray *pixelData, Pixel col)
 {
 	for (int j = 0; j < PIXEL_HEIGHT; j++)
@@ -204,10 +208,11 @@ void MyGame(PixelArray *pixelData, const bool *bQuit)
 	//pixelData-> pointer
 
 	float c = 1.0f;
-	vector3f vec = vector3f(180, 120, 0);
+	vector3f vec = vector3f(screenWidth, screeHeight, 0);
 
 	while (!*bQuit)
 	{
+		//clear screen
 		cls(pixelData, color(0, 0, 0, 255));
 
 		Matrix t, r, v;
@@ -217,8 +222,8 @@ void MyGame(PixelArray *pixelData, const bool *bQuit)
 		//vector3f v3 = vector3f(22, 13, 0);
 
 		//generate 4 Triangles
-		const int numTris = 4;
-		vector3f tri[numTris][3] =
+		const int trs = 4;
+		vector3f tri[trs][3] =
 		{
 			{
 				vector3f(-40, -40, -40),
@@ -243,7 +248,7 @@ void MyGame(PixelArray *pixelData, const bool *bQuit)
 		};
 
 		//select Collor for each Triangle
-		Pixel col[numTris] =
+		Pixel col[trs] =
 		{
 			color(255, 0, 0, 255),
 			color(0, 255, 0, 255),
@@ -253,22 +258,24 @@ void MyGame(PixelArray *pixelData, const bool *bQuit)
 
 		t.SetTranslation(vec);
 		r.SetRotationY(c++);
+		//Translate and rotate
 		v = t * r;
 
 		//draw 4 triangles to screen to make a pyramid
-		for (int i = 0; i < numTris; i++)
+		for (int i = 0; i < trs; i++)
 		{
 			DrawFilledTriangle(v * tri[i][0], v * tri[i][1], v * tri[i][2], col[i]);
 		}
 
 		//Draw 2D triangle to Slide on X Axis
-		DrawTriangle(30, v * vector3f(40, 50, 20), color(255, 255, 0, 255));
+		DrawTriangle(30, v * vector3f(screenWidth - 40, screeHeight - 50, 20), color(255, 255, 0, 255));
 
 		//draw Small triangles on the points of the 3D triangle
 		DrawTriangle(2, v * tri[0][0], color(255, 255, 255, 255));
 		DrawTriangle(2, v * tri[1][0], color(255, 255, 255, 255));
 		DrawTriangle(2, v * tri[1][1], color(255, 255, 255, 255));
 		DrawTriangle(2, v * tri[1][2], color(255, 255, 255, 255));
+		//DrawTriangle(2, vector3f(screenWidth, screeHeight, 0), color(255, 255, 255, 255));
 
 		sleep_for(std::chrono::milliseconds(50));
 	}
