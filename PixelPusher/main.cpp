@@ -146,7 +146,7 @@ check each of the vectors against each other to start
 
 void DrawFilledTriangle(vector3f a, vector3f b, vector3f c, Pixel col)
 {
-	cout << ".";
+	//cout << ".";
 
 	vector3f AB = a - b;
 	vector3f BC = b - c;
